@@ -3,9 +3,11 @@ package au.halc.kafka.kafkaboot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
-@ComponentScan({" au.halc.kafka.controllers"})
+@EnableKafka
+@ComponentScan({"au.halc.kafka.controllers", "au.halc.kafka.consumers", "au.halc.kafka.config"})
 public class KafkabootApplication {
 
 	public static void main(String[] args) {
