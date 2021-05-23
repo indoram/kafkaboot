@@ -15,13 +15,17 @@ Single Account Transfer URL : http://localhost:8081/kafka/accounttransfers/setup
 ![image](https://user-images.githubusercontent.com/2889476/119256031-f963f980-bc01-11eb-890a-ffb4b2bd8766.png)
 
 
-Click On Transfer Funds button publishes  One Transaction to Kafla Topic ith details from account 64534,  to account 64535, amount $1.1 Using unique
-Transaction Reference.
+Click On Transfer Funds button publishes  One Transaction to Kafla Topic 
+Transaction details debit account 64534,  to account 64535, amount $1.12, Using unique Transaction Reference.
 
 ![image](https://user-images.githubusercontent.com/2889476/119256228-0a613a80-bc03-11eb-8c97-2f65c1eb372c.png)
 
 
 Kafka Load Generator
 ===================
+
+Total transactions: 1000
+Randomly selects debit account , credit amount from pool of 4 accounts, amount : $1.12, generates unique transaction reference
+Shows all four accounts with current account balance
 
 ![image](https://user-images.githubusercontent.com/2889476/119256369-bacf3e80-bc03-11eb-9468-460c8b6ceb1e.png)
