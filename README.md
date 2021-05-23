@@ -22,7 +22,7 @@ Transaction details debit account 64534,  to account 64535, amount $1.12, Using 
 
 
 Kafka Load Generator
-===================
+=====================
 URL : http://localhost:8081/kafka/loadgenerator/setup
 
 Total transactions: 1000
@@ -33,5 +33,6 @@ Four accounts with current account balance
 
 Click on Generate Load Button , publishes 1000 transactions to Kafka topic,
 Shows total time taken to publish 1000 transactions
+
 
 ![image](https://user-images.githubusercontent.com/2889476/119256648-0b936700-bc05-11eb-8581-036646897586.png)
