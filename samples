@@ -1,0 +1,7 @@
+http://localhost:8081/kafka/publish/Ramaiosss
+
+http://localhost:8081/kafka/accounttransfers/setup
+
+mvnw spring-boot:run
+
+http://localhost:8081/kafka/loadgenerator/setup

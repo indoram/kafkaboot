@@ -42,4 +42,15 @@ public class AccountTransfer {
 		this.toAccount = toAccount;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append("From Account :" + fromAccount).append(System.lineSeparator());
+		stringBuilder.append("To Account :" + toAccount).append(System.lineSeparator());
+		stringBuilder.append("Amount :" + amount).append(System.lineSeparator());
+		stringBuilder.append("TRN :" + trn);
+		return stringBuilder.toString();
+	}
+	
 }

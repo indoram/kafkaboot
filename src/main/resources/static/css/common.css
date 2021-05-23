@@ -12,11 +12,56 @@ td, th {
     padding: 8px;
 }
 
+.submit {
+  top: 12%;
+  left: 1%;
+  background-color: #008CBA;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+
+.styled-table1 {
+	margin-left: auto;
+    margin-right: auto;
+  	top: 35%;
+  	left: 1%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table1 th,
+.styled-table1 td {
+    padding: 12px 15px;
+}
+
+.styled-table1 thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table1 tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
 .styled-table {
 	margin-left: auto;
     margin-right: auto;
-  	top: 10%;
-  	left: 2%;
+  	top: 9%;
+  	left: 1%;
     border-collapse: collapse;
     margin: 25px 0;
     font-size: 0.9em;

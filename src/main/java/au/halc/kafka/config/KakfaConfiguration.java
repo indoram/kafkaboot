@@ -39,7 +39,11 @@ public class KakfaConfiguration {
           StringDeserializer.class);
         props.put(
           ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, 
-          StringDeserializer.class);
+          org.springframework.kafka.support.serializer.JsonDeserializer.class);
+        props.put("spring.kafka.consumer.properties.spring.json.trusted.packages", 
+        		"au.halc.kafka.model");
+        props.put("spring.json.trusted.packages", 
+        		"au.halc.kafka.model");
         return new DefaultKafkaConsumerFactory<>(props);
     }
 	
