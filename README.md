@@ -1,7 +1,7 @@
 # kafkaboot
 HALC Kafka Producer , Consumer Application
 
-Kafka Application to Demonstrate  Account transfers between two Accounts.
+Kafka Application to Demonstrate transaction between two Accounts, debit account one, credit account two
 
 
 Account Transfer Model
@@ -19,3 +19,9 @@ Click On Transfer Funds button publishes  One Transaction to Kafla Topic ith det
 Transaction Reference.
 
 ![image](https://user-images.githubusercontent.com/2889476/119256228-0a613a80-bc03-11eb-8c97-2f65c1eb372c.png)
+
+
+Kafka Load Generator
+===================
+
+![image](https://user-images.githubusercontent.com/2889476/119256369-bacf3e80-bc03-11eb-9468-460c8b6ceb1e.png)
