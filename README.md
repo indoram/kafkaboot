@@ -30,3 +30,8 @@ Randomly selects debit account , credit amount from pool of 4 accounts, amount :
 Four accounts with current account balance
 
 ![image](https://user-images.githubusercontent.com/2889476/119256369-bacf3e80-bc03-11eb-9468-460c8b6ceb1e.png)
+
+Click on Generate Load Button , publishes 1000 transactions to Kafka topic,
+Shows total time taken to publish 1000 transactions
+
+![image](https://user-images.githubusercontent.com/2889476/119256648-0b936700-bc05-11eb-8581-036646897586.png)
