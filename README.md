@@ -23,7 +23,7 @@ Transaction details debit account 64534,  to account 64535, amount $1.12, Using 
 
 Kafka Load Generator
 ===================
-
+URL : http://localhost:8081/kafka/loadgenerator/setup
 Total transactions: 1000
 Randomly selects debit account , credit amount from pool of 4 accounts, amount : $1.12, generates unique transaction reference
 Shows all four accounts with current account balance
