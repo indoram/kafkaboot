@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class KafkaAccountTransferConstants {
 	
-	public static final int DEFAULT_MAX_OF_TRANSACTIONS = 100;
+	public static final int DEFAULT_MAX_OF_TRANSACTIONS = 1000;
 	public static final int DEFAULT_DURATION = 10;
 	public static final int DEFAULT_DELAY_MILLIS = 1;
 	

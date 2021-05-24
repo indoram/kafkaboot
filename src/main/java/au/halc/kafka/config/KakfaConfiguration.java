@@ -10,8 +10,10 @@ import au.halc.kafka.model.User;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -21,12 +23,21 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+/**
+ * Kafka configuration
+ * @author indor
+ */
 @Configuration
 public class KakfaConfiguration {
 
 	
+	public static final String PLAIN = "PLAIN";
+	public static final String PROTOCOL_SSL = "SASL_SSL";
+	public static final String PROTOCOL_SSL_PLAINTEXT = "SASL_PLAINTEXT";
+	
 	@Bean
     public ConsumerFactory<String, String> consumerFactory() {
+		
         Map<String, Object> props = new HashMap<>();
         props.put(
           ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, 
@@ -44,6 +55,14 @@ public class KakfaConfiguration {
         		"au.halc.kafka.model");
         props.put("spring.json.trusted.packages", 
         		"au.halc.kafka.model");
+         
+        //props.put("security.protocol", "SASL_PLAINTEXT");
+        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, PROTOCOL_SSL);
+        
+        props.put(SaslConfigs.SASL_MECHANISM, PLAIN);
+        
+        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='N7I4DNGDGMWHQSAU'   password='e8VPxIUW5z8ea/FxNcGwTN+BnJWVBK9OJIiEpppQR/ECGingUqzppgsK2uZqPMF2';");
+        
         return new DefaultKafkaConsumerFactory<>(props);
     }
 	
@@ -63,9 +82,20 @@ public class KakfaConfiguration {
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConstants.BOOTSTRAP_ADDRESS);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        config.put("value.serializer", JsonSerializer.class);
         config.put( ProducerConfig.VALUE_SERIALIZER_CLASS_DOC, JsonSerializer.class);
+         
+        config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, PROTOCOL_SSL);
+        
+        config.put(SaslConfigs.SASL_MECHANISM, PLAIN);
+        
+        config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='N7I4DNGDGMWHQSAU'   password='e8VPxIUW5z8ea/FxNcGwTN+BnJWVBK9OJIiEpppQR/ECGingUqzppgsK2uZqPMF2';");
 
+
+        config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, PROTOCOL_SSL);
+        
+        config.put(SaslConfigs.SASL_MECHANISM, PLAIN);        
+        config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='N7I4DNGDGMWHQSAU'   password='e8VPxIUW5z8ea/FxNcGwTN+BnJWVBK9OJIiEpppQR/ECGingUqzppgsK2uZqPMF2';");
+        
         return new DefaultKafkaProducerFactory<>(config);
     }
 
@@ -80,9 +110,15 @@ public class KakfaConfiguration {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConstants.BOOTSTRAP_ADDRESS);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        config.put("value.serializer", JsonSerializer.class);
-        config.put( ProducerConfig.VALUE_SERIALIZER_CLASS_DOC, JsonSerializer.class);     
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);        
+        config.put( ProducerConfig.VALUE_SERIALIZER_CLASS_DOC, JsonSerializer.class);
+        
+        config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, PROTOCOL_SSL);        
+        config.put(SaslConfigs.SASL_MECHANISM, PLAIN);
+        
+        config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='N7I4DNGDGMWHQSAU'   password='e8VPxIUW5z8ea/FxNcGwTN+BnJWVBK9OJIiEpppQR/ECGingUqzppgsK2uZqPMF2';");
+        
+        
         return new DefaultKafkaProducerFactory<>(config);
     }
     
