@@ -23,6 +23,8 @@ public class KafkaAccountTransferConstants {
 	
 	public static final BigDecimal TRAN_AMT = BigDecimal.valueOf(1.12);
 	
+	public static final BigDecimal INIT_AMOUNT = BigDecimal.valueOf(9999999999.99);
+	
 	
 	public static List<Integer> getAccountIds() {
 		List<Integer> accountIds = new ArrayList<>();

@@ -1,6 +1,8 @@
 package au.halc.kafka.controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -21,6 +23,7 @@ import au.halc.kafka.config.KafkaAccountTransferConstants;
 import au.halc.kafka.config.KafkaConstants;
 import au.halc.kafka.model.AccountTransfer;
 import au.halc.kafka.model.LoadGenerator;
+import au.halc.kafka.services.AccountTransferService;
 
 /**
  * Account transfer Load Generator
@@ -40,7 +43,11 @@ public class LoadGeneratorController {
 	
 	private static final String DURATION_MILLIS_KEY = "durationKey";
 	private static final String DURATION_MILLIS = "Time taken to publish ";
+	private static final String MODEL_NAME = "acctbalances";
+	
 
+	@Autowired
+    private AccountTransferService accountTransferService;
 	
 	@Autowired
     private KafkaTemplate<String, AccountTransfer> accountTransferKafkaTemplate;
@@ -49,6 +56,7 @@ public class LoadGeneratorController {
     public String setup(Model model, HttpServletRequest httpServletRequest) {
 		model.addAttribute(LOAD_GEN_STR, createLoadGenerator());
 		httpServletRequest.setAttribute(ACCT_FROM_IDS, KafkaAccountTransferConstants.getAccountIds());
+		setCurrentBalances(httpServletRequest);
 	    return VIEW_NAME;
     }
 	
@@ -67,9 +75,25 @@ public class LoadGeneratorController {
 		httpServletRequest.setAttribute(DURATION_MILLIS_KEY, strValue);
 		httpServletRequest.setAttribute(ACCT_FROM_IDS, KafkaAccountTransferConstants.getAccountIds());
 		
+		waitForConsumerToCathUp();
+		setCurrentBalances(httpServletRequest);
 		return VIEW_NAME; 
 	}
-	 
+	
+	
+	private void waitForConsumerToCathUp() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			logger.error("waitForConsumerToCathUp", e);
+		}
+	}
+	
+	private void setCurrentBalances(HttpServletRequest httpServletRequest) {
+		Map<Integer, BigDecimal> currBalances = accountTransferService.getAccountTransfers();
+		httpServletRequest.setAttribute(MODEL_NAME, currBalances);
+	}
+	
 	private void generateLoad(LoadGenerator loadGenerator) {
 		List<Integer> accountIds = KafkaAccountTransferConstants.getAccountIds();
 		int maxSize = accountIds.size();

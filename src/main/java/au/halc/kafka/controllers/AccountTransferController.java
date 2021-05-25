@@ -1,5 +1,7 @@
 package au.halc.kafka.controllers;
 
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import au.halc.kafka.config.KafkaAccountTransferConstants;
 import au.halc.kafka.config.KafkaConstants;
 import au.halc.kafka.model.AccountTransfer;
+import au.halc.kafka.services.AccountTransferService;
 
 @Controller
 @RequestMapping(path = "/kafka")
@@ -28,6 +31,9 @@ public class AccountTransferController {
 	
 	@Autowired
     private KafkaTemplate<String, AccountTransfer> accountTransferKafkaTemplate;
+	
+	@Autowired
+    private AccountTransferService accountTransferService;
 
 	private static final String ACCT_MODEL_STR = "accountTransfer";
 	private static final String ACCT_FROM_IDS = "fromAccountIds";
@@ -37,10 +43,13 @@ public class AccountTransferController {
 	
 	private static final String TRANSFER_MSG_KEY = "transferSuccessMsg";
 	
+	private static final String MODEL_NAME = "acctbalances";
+	
 	
 	@GetMapping("/accounttransfers/setup")	
     public String setup(Model model, HttpServletRequest httpServletRequest) {
 		createNewAcctTransfer(model, httpServletRequest);
+		setCurrentBalances(httpServletRequest);
         return VIEW_NAME;
     }
 
@@ -59,9 +68,25 @@ public class AccountTransferController {
 		logger.info("Published successfully {} ", accountTransfer.toString());
 		httpServletRequest.setAttribute(TRANSFER_MSG_KEY, "Funds transferred successfully");
 		
+		waitForConsumerToCathUp();
+		setCurrentBalances(httpServletRequest);
+		
 		createNewAcctTransfer(model, httpServletRequest);
 		
 		return VIEW_NAME; 
+	}
+	
+	private void waitForConsumerToCathUp() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			logger.error("waitForConsumerToCathUp", e);
+		}
+	}
+	
+	private void setCurrentBalances(HttpServletRequest httpServletRequest) {
+		Map<Integer, BigDecimal> currBalances = accountTransferService.getAccountTransfers();
+		httpServletRequest.setAttribute(MODEL_NAME, currBalances);
 	}
 	
 	private AccountTransfer createAccountTransfer() {
