@@ -6,7 +6,9 @@ http://localhost:8081/kafka/accountbalances/init.form
 
 http://localhost:8081/kafka/accountbalances/refresh.form
 
-mvnw spring-boot:run
+
+mvnw install -Dmaven.test.skip=true
+mvnw spring-boot:run -Dmaven.test.skip=true
 
 http://localhost:8081/kafka/loadgenerator/setup
 

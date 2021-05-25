@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>au.halc.kafka</groupId>
 	<artifactId>kafkaboot</artifactId>
+	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	
 	<name>halc kafka producer</name>

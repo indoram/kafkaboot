@@ -46,7 +46,7 @@ public class AccountTransferController {
 	private static final String MODEL_NAME = "acctbalances";
 	
 	
-	@GetMapping("/accounttransfers/setup")	
+	@GetMapping("/accounttransfers/setup.form")	
     public String setup(Model model, HttpServletRequest httpServletRequest) {
 		createNewAcctTransfer(model, httpServletRequest);
 		setCurrentBalances(httpServletRequest);

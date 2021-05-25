@@ -5,6 +5,7 @@
     <head>
         <title>Account Transfers</title>
         <link href="<c:url value="/css/common.css"/>" rel="stylesheet" type="text/css">
+        <script src="/js/common.js"></script>
     </head>
     <body>  
     	<br>
@@ -28,10 +29,13 @@
 	                        <td><form:input path="noOfTransactions"/></td>
 	                        <td><form:input path="durationSecs"/></td>
 	                   </tr>
-	                   	                   
-	                   <tr>	                   		
-	                 		<td colspan="2">
+	                       	                   
+	                   <tr>
+	                 		<td colspan="1">
 	                 			<input type="submit" class="submit" value="Generate Load">
+	                 		</td>
+	                 		<td colspan="1">
+	                 				<input type="Button" class="submit" value="Main" onClick="redirectHome()">
 	                 		</td>	
 	                   </tr>
 	                   
@@ -70,12 +74,6 @@
 		         					<td><p style="color:green;"><c:out value="${entry.value}"/></p></td>
 		     					</tr>
 						</c:forEach>
-	   						
-	   						 <tr>	                   		
-		                 		<td colspan="2">
-		                 			<input type="submit" class="submit" value="Refresh">
-		                 		</td>	
-		                   </tr>
 		            </tbody>
 	         </table>  	         
 	        

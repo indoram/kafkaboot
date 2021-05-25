@@ -52,7 +52,7 @@ public class LoadGeneratorController {
 	@Autowired
     private KafkaTemplate<String, AccountTransfer> accountTransferKafkaTemplate;
 
-	@GetMapping("/loadgenerator/setup")	
+	@GetMapping("/loadgenerator/setup.form")	
     public String setup(Model model, HttpServletRequest httpServletRequest) {
 		model.addAttribute(LOAD_GEN_STR, createLoadGenerator());
 		httpServletRequest.setAttribute(ACCT_FROM_IDS, KafkaAccountTransferConstants.getAccountIds());
