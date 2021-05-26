@@ -9,5 +9,6 @@ public final class KafkaConstants {
 	//dedicated
 	//public static final String BOOTSTRAP_ADDRESS = "pkc-pr90o.eastus.azure.confluent.cloud:9092";
 	
+	public static final int DB_BATCH = 1000;
 	
 }

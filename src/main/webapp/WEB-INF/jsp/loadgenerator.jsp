@@ -58,7 +58,7 @@
 	            </tbody>
 	        </table>
 	        
-	        <table class="styled-table1">
+	        <table class="styled-table3">
 		            <thead>
 		                <tr>
 		                    <th>Account Id</th>

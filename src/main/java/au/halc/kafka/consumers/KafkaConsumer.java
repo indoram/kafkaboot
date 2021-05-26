@@ -39,6 +39,16 @@ public class KafkaConsumer {
 		accountTransferService.accountTransfer(accountTransfer);
 	}
 	
+	/**
+	 * @KafkaListener(
+  			topicPartitions = @TopicPartition(topic = "topicName",
+  				partitionOffsets = {
+    				@PartitionOffset(partition = "0", initialOffset = "0"), 
+    				@PartitionOffset(partition = "3", initialOffset = "0")}),
+  						containerFactory = "partitionsKafkaListenerContainerFactory")
+	 * @param user
+	 */
+	
 	@KafkaListener(topics = TOPIC, groupId = GROUP_ID)
 	public void consume(User user) {
 		logger.info(String.format("User created -> %s", user));

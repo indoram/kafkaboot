@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class KafkaAccountTransferConstants {
 	
-	public static final int DEFAULT_MAX_OF_TRANSACTIONS = 1000;
+	public static final int DEFAULT_MAX_OF_TRANSACTIONS = 10000;
 	public static final int DEFAULT_DURATION = 10;
 	public static final int DEFAULT_DELAY_MILLIS = 1;
 	
@@ -18,6 +18,8 @@ public class KafkaAccountTransferConstants {
 	public static final int ACCOUNT_ID_2 = 64535;
 	public static final int ACCOUNT_ID_3 = 74535;
 	public static final int ACCOUNT_ID_4 = 74536;
+	public static final int ACCOUNT_ID_5 = 74537;
+	public static final int ACCOUNT_ID_6 = 74539;
 	
 	public static final String TRAN_REF = "Ref";
 	
@@ -32,6 +34,8 @@ public class KafkaAccountTransferConstants {
 		accountIds.add(ACCOUNT_ID_2);
 		accountIds.add(ACCOUNT_ID_3);
 		accountIds.add(ACCOUNT_ID_4);
+		accountIds.add(ACCOUNT_ID_5);
+		accountIds.add(ACCOUNT_ID_6);
 		return accountIds;
 	}
 	
@@ -41,6 +45,8 @@ public class KafkaAccountTransferConstants {
 		accountIds.add(ACCOUNT_ID_1);
 		accountIds.add(ACCOUNT_ID_3);
 		accountIds.add(ACCOUNT_ID_4);
+		accountIds.add(ACCOUNT_ID_5);
+		accountIds.add(ACCOUNT_ID_6);
 		return accountIds;
 	}
 }

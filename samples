@@ -19,3 +19,17 @@ set JAVA_HOME=C:\Ramu\dev\Java\jdk1.8.0_291
 
 start .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
 start .\bin\windows\kafka-server-start .\config\server.properties
+
+
+CREATE TABLE [IF NOT EXISTS] kafka_settled_transactions (
+    tran_id serial PRIMARY KEY,
+	trn VARCHAR ( 64)  NOT NULL,
+	amount NUMERIC(14,2) NOT NULL,
+	debitAccountId NUMERIC (12)  NOT NULL,
+	creditAccountId NUMERIC (12)  NOT NULL
+);
+spring.datasource.initialization-mode=always
+spring.datasource.platform=postgres
+spring.datasource.url=jdbc:postgresql://halc-postgres.postgres.database.azure.com:5432/kafka_example
+spring.datasource.username=halc_pg_admin
+spring.datasource.password=ITSandbox2021

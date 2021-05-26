@@ -37,7 +37,9 @@ public class IndexController {
 		Map<String, String> mapLinks = new LinkedHashMap<String, String>();
 		mapLinks.put("kafka/accountbalances/init.form", "Reset Account Balances");
 		mapLinks.put("kafka/accounttransfers/setup.form", "publish single account transfer to topic");
-		mapLinks.put("kafka/loadgenerator/setup.form", "generate load on topic");
+		mapLinks.put("kafka/loadgenerator/setup.form", "generate load");
+		mapLinks.put("kafka/dbtps/info.form", "DB throughput (PostgreSQL)");
+		mapLinks.put("kafka/dbbrowse/info.form", "Browse transactions (PostgreSQL)");
 		return mapLinks;
 	}
 }

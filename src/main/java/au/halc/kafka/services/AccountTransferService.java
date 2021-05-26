@@ -10,9 +10,13 @@ import au.halc.kafka.model.AccountTransfer;
  * @author indor
  */
 public interface AccountTransferService {
+	
 	boolean accountTransfer(AccountTransfer accountTransfer);
+	
 	void initAccountBalances();
 	
 	Map<Integer, BigDecimal> getAccountTransfers();
+	
+	String getDBInsertTPS();
 	
 }

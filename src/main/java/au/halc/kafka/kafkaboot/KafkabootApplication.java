@@ -8,7 +8,8 @@ import org.springframework.kafka.annotation.EnableKafka;
 @SpringBootApplication
 @EnableKafka
 @ComponentScan({"au.halc.kafka.controllers", "au.halc.kafka.consumers", 
-		"au.halc.kafka.config", "au.halc.kafka.services", "au.halc.kafka.repository"})
+		"au.halc.kafka.config", "au.halc.kafka.services", 
+		"au.halc.kafka.repository", "au.halc.kafka.dao"})
 public class KafkabootApplication {
 
 	public static void main(String[] args) {
