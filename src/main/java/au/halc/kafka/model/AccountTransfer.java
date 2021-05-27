@@ -8,7 +8,16 @@ public class AccountTransfer {
 	private String trn;
 	private int fromAccount;
 	private int toAccount;
+	private int tranId;
 	
+
+	public int getTranId() {
+		return tranId;
+	}
+
+	public void setTranId(int tranIdP) {
+		this.tranId = tranIdP;
+	}
 
 	public BigDecimal getAmount() {
 		return amount;
@@ -50,6 +59,7 @@ public class AccountTransfer {
 		stringBuilder.append("To Account :" + toAccount).append(System.lineSeparator());
 		stringBuilder.append("Amount :" + amount).append(System.lineSeparator());
 		stringBuilder.append("TRN :" + trn);
+		stringBuilder.append("tran id :" + tranId);
 		return stringBuilder.toString();
 	}
 	

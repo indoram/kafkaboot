@@ -127,7 +127,7 @@ public class KakfaConfiguration {
         config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='N7I4DNGDGMWHQSAU'   password='e8VPxIUW5z8ea/FxNcGwTN+BnJWVBK9OJIiEpppQR/ECGingUqzppgsK2uZqPMF2';");
         
         //dedicated
-        //config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='NS57YPPXXEFXLJH3'   password='47D2mDTchqwbnVqUdqXA8ngW80NRVkA+uJY8oTI3NYCgRC7Rf/csE8nap6kc4Bg1';");
+       // config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='NS57YPPXXEFXLJH3'   password='47D2mDTchqwbnVqUdqXA8ngW80NRVkA+uJY8oTI3NYCgRC7Rf/csE8nap6kc4Bg1';");
         
         return new DefaultKafkaProducerFactory<>(config);
     }

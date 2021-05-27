@@ -1,6 +1,7 @@
 package au.halc.kafka.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -91,6 +92,11 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 			return stringBuilder.toString();
 		}
 		return "No Account Transfers recorded!";
+	}
+
+	@Override
+	public List<AccountTransfer> fetchLast500Transfers() {
+		return accountTransferDAO.fetchLast500Transfers();
 	}
 
 }

@@ -39,7 +39,7 @@ public class IndexController {
 		mapLinks.put("kafka/accounttransfers/setup.form", "publish single account transfer to topic");
 		mapLinks.put("kafka/loadgenerator/setup.form", "generate load");
 		mapLinks.put("kafka/dbtps/info.form", "DB throughput (PostgreSQL)");
-		mapLinks.put("kafka/dbbrowse/info.form", "Browse transactions (PostgreSQL)");
+		mapLinks.put("kafka/dbbrowse/info.form", "Browse last 500 transactions (PostgreSQL)");
 		return mapLinks;
 	}
 }

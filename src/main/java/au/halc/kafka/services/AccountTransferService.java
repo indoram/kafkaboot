@@ -1,6 +1,7 @@
 package au.halc.kafka.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import au.halc.kafka.model.AccountTransfer;
@@ -18,5 +19,7 @@ public interface AccountTransferService {
 	Map<Integer, BigDecimal> getAccountTransfers();
 	
 	String getDBInsertTPS();
+	
+	List<AccountTransfer> fetchLast500Transfers();
 	
 }

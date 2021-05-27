@@ -22,4 +22,5 @@ public interface AccountTransferDAO {
 	 */
 	void inserBatch(List<AccountTransfer> batchAccountTransfers);
 
+	List<AccountTransfer> fetchLast500Transfers();
 }

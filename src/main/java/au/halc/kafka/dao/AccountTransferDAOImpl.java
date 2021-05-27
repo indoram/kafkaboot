@@ -1,7 +1,9 @@
 package au.halc.kafka.dao;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -28,6 +30,8 @@ public class AccountTransferDAOImpl implements AccountTransferDAO {
 	
 	
 	private String settled_trans = "INSERT INTO kafka_settled_transactions " + "(debitAccountId, creditAccountId, amount, trn) VALUES (?, ?, ?, ?)";
+	
+	private String settled_sql_last500 = "SELECT * FROM kafka_settled_transactions ORDER BY tran_id DESC limit 500;";
 	
 	@Override
 	public void insert(AccountTransfer accountTransfer) {
@@ -61,6 +65,30 @@ public class AccountTransferDAOImpl implements AccountTransferDAO {
 			logger.error("Error when inserting account transfers");
 		}
 		
+	}
+
+	@Override
+	public List<AccountTransfer> fetchLast500Transfers() {
+		List<AccountTransfer> acctList = new ArrayList<>();
+		jdbcTemplate.query(settled_sql_last500, rs -> {
+			
+			AccountTransfer acctTransfer = new AccountTransfer();
+			
+			String trn = rs.getString("trn");
+			int debitAcctId = rs.getInt("debitAccountId");
+			int creditAcctId = rs.getInt("creditAccountId");
+			BigDecimal amount = rs.getBigDecimal("amount");
+			Integer tranId = rs.getInt("tran_id");
+			
+			acctTransfer.setTrn(trn);
+			acctTransfer.setFromAccount(debitAcctId);
+			acctTransfer.setToAccount(creditAcctId);
+			acctTransfer.setAmount(amount);
+			acctTransfer.setTranId(tranId);
+			
+			acctList.add(acctTransfer);
+		});
+		return acctList;
 	}
 
 }

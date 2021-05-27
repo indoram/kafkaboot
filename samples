@@ -20,6 +20,7 @@ set JAVA_HOME=C:\Ramu\dev\Java\jdk1.8.0_291
 start .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
 start .\bin\windows\kafka-server-start .\config\server.properties
 
+https://github.com/InnovLab-65mp/halc/tree/main/Kafka_Experiment
 
 CREATE TABLE [IF NOT EXISTS] kafka_settled_transactions (
     tran_id serial PRIMARY KEY,
@@ -33,3 +34,21 @@ spring.datasource.platform=postgres
 spring.datasource.url=jdbc:postgresql://halc-postgres.postgres.database.azure.com:5432/kafka_example
 spring.datasource.username=halc_pg_admin
 spring.datasource.password=ITSandbox2021
+
+ 1  pwd
+    2  az aks get-credentials -n aks-cluster -g halc-aks
+    3  kubectl edit deployment kafka
+    4  pwd
+    5  kubect get svc
+    6  kubectl get svc
+    7  kubectl get pods
+    8  kubectl edit deployment kafka
+    9  kubectl get svc
+   10  kubectl get pods
+   11  kubectl logs kafka-64546f5898-jtvxp
+   12  history
+   13  pwd
+   14  ls
+   15  history
+   
+   SELECT * FROM kafka_settled_transactions ORDER BY value DESC limit 500;
