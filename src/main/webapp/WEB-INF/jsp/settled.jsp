@@ -9,7 +9,7 @@
     </head>
     <body>  
     	<br>
-    	<h2 style="color:blue" align="center">HALC Kafka PostgreSQL last 500</h2>
+    	<h2 style="color:blue" align="center"><a href = "/">HALC Kafka PostgreSQL last 500</a></h2>
     	<br>
     	<br>
     	
