@@ -2,19 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.5.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>au.halc.kafka</groupId>
 	<artifactId>kafkaboot</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	
-	<name>halc kafka producer</name>
-	<description>halc kafka producer</description>
+	<name>halc kafka parent pom</name>
+	<description>halc kafka App to demonstrate Kafka Producer, Kafka Consumer, PostgresSQL</description>
 	
 	<properties>
 		<java.version>8</java.version>
@@ -22,45 +24,23 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	
+	 <modules>
+        <module>halc-common</module>
+        <module>halc-producer</module>
+        <module>halc-consumer</module>
+    </modules>
+    
 	<dependencies>
-	
-		
-		<dependency>
-    		<groupId>org.apache.tomcat.embed</groupId>
-    		<artifactId>tomcat-embed-jasper</artifactId>
-    		<version>9.0.44</version>
-    		<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-    		<groupId>javax.servlet</groupId>
-    		<artifactId>jstl</artifactId>
-    		<version>1.2</version>
-		</dependency>
 		
 		 <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
         		
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
-        
-        
-       
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		
@@ -74,6 +54,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka-test</artifactId>
@@ -91,6 +72,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
 	</dependencies>
 
 	<build>
