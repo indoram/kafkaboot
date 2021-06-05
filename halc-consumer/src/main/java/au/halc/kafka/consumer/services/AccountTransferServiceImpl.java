@@ -78,7 +78,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
 
 	@Override
-	public Map<Integer, BigDecimal> getAccountTransfers() {
+	public Map<Integer, BigDecimal> getCurrentBalances() {
 		return accountBalancesRepository.getCurrentBalances();
 	}
 

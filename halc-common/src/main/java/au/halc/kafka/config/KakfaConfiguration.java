@@ -29,12 +29,13 @@ import org.springframework.kafka.core.ProducerFactory;
  */
 @Configuration
 public class KakfaConfiguration {
-
 	
 	public static final String PLAIN = "PLAIN";
 	public static final String PROTOCOL_SSL = "SASL_SSL";
 	public static final String PROTOCOL_SSL_PLAINTEXT = "SASL_PLAINTEXT";
 	
+	
+
 	@Bean
     public ConsumerFactory<String, String> consumerFactory() {
 		

@@ -28,6 +28,7 @@
         <module>halc-common</module>
         <module>halc-producer</module>
         <module>halc-consumer</module>
+        <module>halc-web</module>
     </modules>
     
 	<dependencies>

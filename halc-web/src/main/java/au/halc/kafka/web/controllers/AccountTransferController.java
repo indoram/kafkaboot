@@ -1,6 +1,7 @@
-package au.halc.kafka.consumer.controllers;
+package au.halc.kafka.web.controllers;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,10 +18,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.reactive.function.client.WebClient;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import au.halc.kafka.config.KafkaAccountTransferConstants;
 import au.halc.kafka.config.KafkaConstants;
 import au.halc.kafka.model.AccountTransfer;
-import au.halc.kafka.consumer.services.AccountTransferService;
+import au.halc.kafka.model.AccountBalance;
 
 @Controller
 @RequestMapping(path = "/kafka")
@@ -29,11 +38,7 @@ public class AccountTransferController {
 	private final Logger logger 
 			= LoggerFactory.getLogger(AccountTransferController.class);
 	
-	@Autowired
-    private KafkaTemplate<String, AccountTransfer> accountTransferKafkaTemplate;
 	
-	@Autowired
-    private AccountTransferService accountTransferService;
 
 	private static final String ACCT_MODEL_STR = "accountTransfer";
 	private static final String ACCT_FROM_IDS = "fromAccountIds";
@@ -45,8 +50,14 @@ public class AccountTransferController {
 	
 	private static final String MODEL_NAME = "acctbalances";
 	
+	@Autowired
+	private WebClient consumerWebClient;
 	
-	@GetMapping("/accounttransfers/setup.form")	
+	@Autowired
+	private WebClient producerWebClient;
+	
+	
+	@GetMapping("/web/accounttransfers/setup.form")	
     public String setup(Model model, HttpServletRequest httpServletRequest) {
 		createNewAcctTransfer(model, httpServletRequest);
 		setCurrentBalances(httpServletRequest);
@@ -61,17 +72,24 @@ public class AccountTransferController {
 		model.addAttribute(ACCT_FROM_IDS, createAccountTransfer());
 	}
 	
-	@PostMapping(path = "/accounttransfers/transfer.form")
+	@PostMapping(path = "/web/accounttransfers/transfer.form")
 	public String publish(@ModelAttribute AccountTransfer accountTransfer, Model model, HttpServletRequest httpServletRequest) {
-		logger.info("Publishing {} ", accountTransfer.toString());
-		accountTransferKafkaTemplate.send(KafkaConstants.TOPIC, accountTransfer);
-		logger.info("Published successfully {} ", accountTransfer.toString());
+		logger.info("Publishing****** {} ", accountTransfer.toString());
+		
+		
+		AccountTransfer publishedTransfer = producerWebClient.post()
+		        .uri("/kafka/producer/singleaccounttransfer/transfer.form")
+		        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+		        .body(Mono.just(accountTransfer), AccountTransfer.class)
+		        .retrieve()
+		        .bodyToMono(AccountTransfer.class)
+		        .block();
+		
+		logger.info("Published successfully {} ", publishedTransfer.toString());
 		httpServletRequest.setAttribute(TRANSFER_MSG_KEY, "Funds transferred successfully");
-		
-		waitForConsumerToCathUp();
 		setCurrentBalances(httpServletRequest);
-		
 		createNewAcctTransfer(model, httpServletRequest);
+		
 		
 		return VIEW_NAME; 
 	}
@@ -85,8 +103,8 @@ public class AccountTransferController {
 	}
 	
 	private void setCurrentBalances(HttpServletRequest httpServletRequest) {
-		Map<Integer, BigDecimal> currBalances = accountTransferService.getCurrentBalances();
-		httpServletRequest.setAttribute(MODEL_NAME, currBalances);
+		List<AccountBalance> accoutBalancesList  = AccountBalancesRetriever.fetchAccountBalances(consumerWebClient);
+		httpServletRequest.setAttribute(MODEL_NAME, accoutBalancesList);
 	}
 	
 	private AccountTransfer createAccountTransfer() {

@@ -11,4 +11,9 @@ public final class KafkaConstants {
 	
 	public static final int DB_BATCH = 1000;
 	
+	public static final String CONSUMER_ENDPOINT = "http://localhost:8083";
+	
+	public static final String PRODUCER_ENDPOINT = "http://localhost:8082";
+	
+	public static final int FLUX_BLOCK_TIME_SECS = 5;
 }

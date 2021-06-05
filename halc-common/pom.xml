@@ -14,6 +14,8 @@
     <name>${project.groupId}:${project.artifactId}</name>
 	<description>common module</description>
     <packaging>jar</packaging>
+    
+  
 
 	<build>
 		<plugins>

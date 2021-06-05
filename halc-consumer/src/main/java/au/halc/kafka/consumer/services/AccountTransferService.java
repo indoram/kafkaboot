@@ -16,7 +16,7 @@ public interface AccountTransferService {
 	
 	void initAccountBalances();
 	
-	Map<Integer, BigDecimal> getAccountTransfers();
+	Map<Integer, BigDecimal> getCurrentBalances();
 	
 	String getDBInsertTPS();
 	

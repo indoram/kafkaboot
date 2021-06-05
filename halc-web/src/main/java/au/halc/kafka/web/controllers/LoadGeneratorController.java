@@ -1,4 +1,4 @@
-package au.halc.kafka.consumer.controllers;
+package au.halc.kafka.web.controllers;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +23,6 @@ import au.halc.kafka.config.KafkaAccountTransferConstants;
 import au.halc.kafka.config.KafkaConstants;
 import au.halc.kafka.model.AccountTransfer;
 import au.halc.kafka.model.LoadGenerator;
-import au.halc.kafka.consumer.services.AccountTransferService;
 
 /**
  * Account transfer Load Generator
@@ -44,10 +43,6 @@ public class LoadGeneratorController {
 	private static final String DURATION_MILLIS_KEY = "durationKey";
 	private static final String DURATION_MILLIS = "Time taken to publish ";
 	private static final String MODEL_NAME = "acctbalances";
-	
-
-	@Autowired
-    private AccountTransferService accountTransferService;
 	
 	@Autowired
     private KafkaTemplate<String, AccountTransfer> accountTransferKafkaTemplate;
@@ -90,8 +85,7 @@ public class LoadGeneratorController {
 	}
 	
 	private void setCurrentBalances(HttpServletRequest httpServletRequest) {
-		Map<Integer, BigDecimal> currBalances = accountTransferService.getCurrentBalances();
-		httpServletRequest.setAttribute(MODEL_NAME, currBalances);
+		//httpServletRequest.setAttribute(MODEL_NAME, currBalances);
 	}
 	
 	private void generateLoad(LoadGenerator loadGenerator) {

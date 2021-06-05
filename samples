@@ -10,8 +10,13 @@ http://localhost:8081/kafka/accountbalances/refresh.form
 mvnw install -Dmaven.test.skip=true
 mvnw spring-boot:run -Dmaven.test.skip=true
 
-mvnw -pl halc-producer install -Dmaven.test.skip=true
+mvnw -pl halc-common,halc-producer,halc-consumer,halc-web install -Dmaven.test.skip=true
 
+mvnw -pl halc-producer install -Dmaven.test.skip=true
+mvnw -pl halc-producer spring-boot:run -Dmaven.test.skip=true
+
+mvnw -pl halc-web spring-boot:run -Dmaven.test.skip=true
+mvnw -pl halc-consumer spring-boot:run -Dmaven.test.skip=true
 mvnw -pl halc-producer spring-boot:run -Dmaven.test.skip=true
 
 http://localhost:8081/kafka/loadgenerator/setup

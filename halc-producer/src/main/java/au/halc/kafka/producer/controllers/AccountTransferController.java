@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import au.halc.kafka.config.KafkaAccountTransferConstants;
 import au.halc.kafka.config.KafkaConstants;
 import au.halc.kafka.model.AccountTransfer;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * controller to receive requests to perform single account transfer
@@ -48,55 +52,17 @@ public class AccountTransferController {
 	
 	private static final String MODEL_NAME = "acctbalances";
 	
-	
-	@GetMapping(path = "/producer/accounttransfers/publish.form")	
-    public String GetPublish(Model model, HttpServletRequest httpServletRequest) {		
-		AccountTransfer accountTransfer = createAccountTransfer();
-		return publishSingleAccountTransfer(accountTransfer);
-    }
-
-	private void createNewAcctTransfer(Model model, HttpServletRequest httpServletRequest) {
-		model.addAttribute(ACCT_MODEL_STR, createAccountTransfer());		
-		model.addAttribute(ACCT_FROM_IDS, KafkaAccountTransferConstants.getAccountIds());		
-		httpServletRequest.setAttribute(ACCT_FROM_IDS, KafkaAccountTransferConstants.getAccountIds());
-		httpServletRequest.setAttribute(ACCT_TO_IDS, KafkaAccountTransferConstants.getToAccountIds());		
-		model.addAttribute(ACCT_FROM_IDS, createAccountTransfer());
+	@PostMapping(path = "/producer/singleaccounttransfer/transfer.form")
+	public Mono<AccountTransfer> publish(@RequestBody AccountTransfer accountTransferMono, Model model, HttpServletRequest httpServletRequest) {
+		logger.info("Producer Publishing {} ", accountTransferMono.toString());
+		return Mono.just(publishSingleAccountTransfer(accountTransferMono));
 	}
 	
-	@PostMapping(path = "/producer/accounttransfers/publish.form")
-	public String publish(@ModelAttribute AccountTransfer accountTransfer, Model model, HttpServletRequest httpServletRequest) {
-		logger.info("Publishing {} ", accountTransfer.toString());
-		return publishSingleAccountTransfer(accountTransfer); 
-	}
-	
-	private String publishSingleAccountTransfer(AccountTransfer accountTransfer) {
-		logger.info("Publishing {} ", accountTransfer.toString());
+	private AccountTransfer publishSingleAccountTransfer(AccountTransfer accountTransfer) {
 		accountTransferKafkaTemplate.send(KafkaConstants.TOPIC, accountTransfer);
-		logger.info("Published successfully {} ", accountTransfer.toString());
-        return "Published successfully";
+		logger.info("Producer Published successfully {} ", accountTransfer.toString());
+        return accountTransfer;
 	}
 	
-	private void waitForConsumerToCathUp() {
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			logger.error("waitForConsumerToCathUp", e);
-		}
-	}
-	
-	private AccountTransfer createAccountTransfer() {
-		AccountTransfer acctTransfer = new AccountTransfer();
-		acctTransfer.setFromAccount(KafkaAccountTransferConstants.ACCOUNT_ID_1);
-		acctTransfer.setToAccount(KafkaAccountTransferConstants.ACCOUNT_ID_2);
-		acctTransfer.setTrn(buildAcctRef());
-		acctTransfer.setAmount(KafkaAccountTransferConstants.TRAN_AMT);
-		return acctTransfer;				
-	}
-	
-	private String buildAcctRef() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(UUID.randomUUID().toString());
-		return builder.toString();
-	}
 	
 }
