@@ -70,6 +70,10 @@ public class AccountBalanceInitController {
     public Flux<AccountBalance> refresh(Model model, HttpServletRequest httpServletRequest) {
 		logger.info("fetching Account Balances.....");
 		Map<Integer, BigDecimal> currBalances = accountTransferService.getCurrentBalances();		
+		if (currBalances == null || currBalances.size() == 0) {
+			logger.info("Consumer Initialising Account Balances.....");
+			accountTransferService.initAccountBalances();	
+		}		
 		Map<Integer, AccountBalance> acctBals = convertToFlux(currBalances);
 	    return Flux.fromIterable(acctBals.values());
     }

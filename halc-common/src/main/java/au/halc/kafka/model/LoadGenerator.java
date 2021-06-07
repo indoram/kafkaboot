@@ -5,7 +5,17 @@ public class LoadGenerator {
 	private int noOfTransactions;
 	private int durationSecs;
 	private long delayInMillis;
+	
+	private long publishTimeMillis;
 
+	public long getPublishTimeMillis() {
+		return publishTimeMillis;
+	}
+	
+	public void setPublishTimeMillis(long publishTimeMillisP) {
+		publishTimeMillis = publishTimeMillisP;
+	}
+	
 	public long getDelayInMillis() {
 		return delayInMillis;
 	}

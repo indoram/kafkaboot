@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import au.halc.kafka.dao.AccountTransferDAO;
 import au.halc.kafka.model.AccountTransfer;
+import au.halc.kafka.model.DBTps;
 import au.halc.kafka.repository.InMemoryAccountBalancesRepository;
+
 
 /**
  * Account Transfer service Impl.
@@ -33,6 +35,15 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 	
 	@Autowired
 	private AccountTransferDAO accountTransferDAO;
+	
+	@Override
+	public DBTps getDBTPS() {
+		DBTps dbTps = new DBTps();
+		dbTps.setTotalNo(totalNo);
+		dbTps.setTimeInMillis(timeInMillis);
+		return dbTps;
+	}
+	
 	
 	@Override
 	public boolean accountTransfer(AccountTransfer accountTransfer) {

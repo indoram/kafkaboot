@@ -19,7 +19,6 @@
 	            <thead>
 	                <tr>
 	                    <th>Max. Account Transfers</th>
-	                    <th>Duration Secs</th>
 	                </tr>
 	            </thead>
 	            
@@ -27,7 +26,6 @@
 	            		
 	                   <tr class="active-row">  		
 	                        <td><form:input path="noOfTransactions"/></td>
-	                        <td><form:input path="durationSecs"/></td>
 	                   </tr>
 	                       	                   
 	                   <tr>
@@ -70,8 +68,8 @@
 		            	
 		            	<c:forEach items="${acctbalances}" var="entry">
 	    					<tr class="active-row">
-		         					<td><p style="color:green;"><c:out value="${entry.key}"/></p></td>
-		         					<td><p style="color:green;"><c:out value="${entry.value}"/></p></td>
+		         					<td><p style="color:green;"><c:out value="${entry.accountId}"/></p></td>
+		         					<td><p style="color:green;"><c:out value="${entry.amount}"/></p></td>
 		     					</tr>
 						</c:forEach>
 		            </tbody>

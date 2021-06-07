@@ -1,6 +1,7 @@
 package au.halc.kafka.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class AccountTransfer {
 
@@ -10,7 +11,37 @@ public class AccountTransfer {
 	private int toAccount;
 	private int tranId;
 	
+	private LocalDateTime publishDateTime;
+	private LocalDateTime settleDateTime;
+	private LocalDateTime storeDateTime;
+	
 
+	public LocalDateTime getPublishDateTime() {
+		return publishDateTime;
+	}
+	
+	public LocalDateTime getSettleDateTime() {
+		return settleDateTime;
+	}
+	
+	public LocalDateTime getStoreDateTime() {
+		return storeDateTime;
+	}
+	
+	public void setStoreDateTime(LocalDateTime storeDateTimeP) {
+		storeDateTime = storeDateTimeP;
+	}
+	
+	public void setSettleDateTime(LocalDateTime settleDateTimeP) {
+		settleDateTime = settleDateTimeP;
+	}
+	
+	public void setPublishDateTime(LocalDateTime publishDateTimeP) {
+		publishDateTime = publishDateTimeP;
+	}
+	
+	
+	
 	public int getTranId() {
 		return tranId;
 	}

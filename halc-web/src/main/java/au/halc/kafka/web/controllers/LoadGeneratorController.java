@@ -19,10 +19,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.reactive.function.client.WebClient;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import au.halc.kafka.config.KafkaAccountTransferConstants;
 import au.halc.kafka.config.KafkaConstants;
 import au.halc.kafka.model.AccountTransfer;
 import au.halc.kafka.model.LoadGenerator;
+import au.halc.kafka.model.AccountBalance;
 
 /**
  * Account transfer Load Generator
@@ -35,6 +44,13 @@ public class LoadGeneratorController {
 	private final Logger logger 
 			= LoggerFactory.getLogger(LoadGeneratorController.class);
 	
+	
+	@Autowired
+	private WebClient consumerWebClient;
+	
+	@Autowired
+	private WebClient producerWebClient;
+	
 	private static final String VIEW_NAME = "loadgenerator";
 	private static final String LOAD_GEN_STR = "loadGenerator";
 	
@@ -44,10 +60,8 @@ public class LoadGeneratorController {
 	private static final String DURATION_MILLIS = "Time taken to publish ";
 	private static final String MODEL_NAME = "acctbalances";
 	
-	@Autowired
-    private KafkaTemplate<String, AccountTransfer> accountTransferKafkaTemplate;
 
-	@GetMapping("/loadgenerator/setup.form")	
+	@GetMapping("/web/loadgenerator/setup.form")	
     public String setup(Model model, HttpServletRequest httpServletRequest) {
 		model.addAttribute(LOAD_GEN_STR, createLoadGenerator());
 		httpServletRequest.setAttribute(ACCT_FROM_IDS, KafkaAccountTransferConstants.getAccountIds());
@@ -55,57 +69,35 @@ public class LoadGeneratorController {
 	    return VIEW_NAME;
     }
 	
-	@PostMapping(path = "/loadgenerator/generateload.form")
+	@PostMapping(path = "/web/loadgenerator/generateload.form")
 	public String generateLoad(@ModelAttribute LoadGenerator loadGenerator, Model model, HttpServletRequest httpServletRequest) {
 		logger.info("Load Generator input {} ", loadGenerator.toString());
-		logger.info("**** Starting to generate load ***");
-		long startTime = System.currentTimeMillis();
-		generateLoad(loadGenerator);
-		long endTime = System.currentTimeMillis();
-		long deltaMillis = endTime - startTime;
-		logger.info("**** Ended generating load *** {} ms", deltaMillis);
-		model.addAttribute(LOAD_GEN_STR, createLoadGenerator());
+		LoadGenerator loadGeneration = submitLoad(loadGenerator);
 		
-		String strValue =  DURATION_MILLIS + loadGenerator.getNoOfTransactions() + " messages took "  + deltaMillis + " (ms)"; 
+		String strValue =  DURATION_MILLIS + loadGenerator.getNoOfTransactions() + " messages took "  + loadGeneration.getPublishTimeMillis() + " (ms)";
+		
 		httpServletRequest.setAttribute(DURATION_MILLIS_KEY, strValue);
 		httpServletRequest.setAttribute(ACCT_FROM_IDS, KafkaAccountTransferConstants.getAccountIds());
 		
-		waitForConsumerToCathUp();
 		setCurrentBalances(httpServletRequest);
 		return VIEW_NAME; 
 	}
 	
-	
-	private void waitForConsumerToCathUp() {
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			logger.error("waitForConsumerToCathUp", e);
-		}
+	private LoadGenerator submitLoad(LoadGenerator loadGenerator) {
+		LoadGenerator loadGeneratorResp = producerWebClient.post()
+		        .uri("/kafka/producer/loadgenerator/publish.form")
+		        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+		        .body(Mono.just(loadGenerator), LoadGenerator.class)
+		        .retrieve()
+		        .bodyToMono(LoadGenerator.class)
+		        .block();
+		return loadGeneratorResp;
 	}
 	
 	private void setCurrentBalances(HttpServletRequest httpServletRequest) {
-		//httpServletRequest.setAttribute(MODEL_NAME, currBalances);
-	}
-	
-	private void generateLoad(LoadGenerator loadGenerator) {
-		List<Integer> accountIds = KafkaAccountTransferConstants.getAccountIds();
-		int maxSize = accountIds.size();
-		Random rn = new Random();
-		
-		for (int i = 0; i < loadGenerator.getNoOfTransactions(); i++) {			
-			int fromId = rn.nextInt(maxSize);
-			int toId   = rn.nextInt(maxSize);
-			
-			AccountTransfer acctTransfer = new AccountTransfer();
-			acctTransfer.setFromAccount(accountIds.get(fromId));
-			acctTransfer.setToAccount(accountIds.get(toId));
-			acctTransfer.setTrn(buildAcctRef());
-			acctTransfer.setAmount(KafkaAccountTransferConstants.TRAN_AMT);			
-			accountTransferKafkaTemplate.send(KafkaConstants.TOPIC, acctTransfer);			
-		}
-		
-	}
+		List<AccountBalance> accoutBalancesList  = AccountBalancesRetriever.fetchAccountBalances(consumerWebClient);
+		httpServletRequest.setAttribute(MODEL_NAME, accoutBalancesList);
+	}	
 	
 	private String buildAcctRef() {
 		StringBuilder builder = new StringBuilder();

@@ -44,9 +44,7 @@ public class AccountBalanceInitController {
 		logger.info("Received Request to Initialise Account Balances");
 		List<AccountBalance> accoutBalancesList  = AccountBalancesRetriever.resetAccountBalances(consumerWebClient);
 		logger.info("Account Balanaces {}", accoutBalancesList);
-		
 		setBalances(httpServletRequest, accoutBalancesList);
-		
 	    return VIEW_NAME;
     }
 	
@@ -54,9 +52,19 @@ public class AccountBalanceInitController {
 		httpServletRequest.setAttribute(MODEL_NAME, accoutBalancesList);
 	}
 	
+	
 	@PostMapping(path = "/web/accountbalances/refresh.form")	
+    public String refreshPost(Model model, HttpServletRequest httpServletRequest) {
+		refresh(model, httpServletRequest);
+		return VIEW_NAME;
+    }
+	
+	@GetMapping(path = "/web/accountbalances/refresh.form")	
     public String refresh(Model model, HttpServletRequest httpServletRequest) {
-		logger.info("Refereshing Account Balances.....");
+		logger.info("Refereshing Account Balances.....");		
+		List<AccountBalance> accoutBalancesList  = AccountBalancesRetriever.resetAccountBalances(consumerWebClient);
+		logger.info("Account Balanaces {}", accoutBalancesList);		
+		setBalances(httpServletRequest, accoutBalancesList);
 	    return VIEW_NAME;
     }
 	

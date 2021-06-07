@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import au.halc.kafka.model.AccountTransfer;
+import au.halc.kafka.model.DBTps;
 
 /**
  * Account Transfer Service.
@@ -21,5 +22,7 @@ public interface AccountTransferService {
 	String getDBInsertTPS();
 	
 	List<AccountTransfer> fetchLast500Transfers();
+	
+	DBTps getDBTPS();
 	
 }
