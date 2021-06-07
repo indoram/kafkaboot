@@ -1,6 +1,7 @@
 package au.halc.kafka.consumer.services;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -8,10 +9,14 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+
+import au.halc.kafka.config.KafkaConstants;
 import au.halc.kafka.dao.AccountTransferDAO;
 import au.halc.kafka.model.AccountTransfer;
+import au.halc.kafka.model.SettledTransaction;
 import au.halc.kafka.model.DBTps;
 import au.halc.kafka.repository.InMemoryAccountBalancesRepository;
 
@@ -36,6 +41,9 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 	@Autowired
 	private AccountTransferDAO accountTransferDAO;
 	
+	@Autowired
+    private KafkaTemplate<String, SettledTransaction> settledTransactionKafkaTemplate;
+	
 	@Override
 	public DBTps getDBTPS() {
 		DBTps dbTps = new DBTps();
@@ -53,23 +61,37 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 			initAccountBalances();
 		}
 		
-		long t1 = System.currentTimeMillis();		
-		accountTransferDAO.insert(accountTransfer);		
-		long t2 = System.currentTimeMillis();
+		//long t1 = System.currentTimeMillis();		
+		//accountTransferDAO.insert(accountTransfer);		
+		//long t2 = System.currentTimeMillis();
 		
-		long delta = (t2 - t1);
+		//long delta = (t2 - t1);
 		
-		logger.info("D Acc Id -> {} , C Acc Id -> {} millis {}", accountTransfer.getFromAccount(), 
-				accountTransfer.getToAccount(), delta);
+		logger.info("D Acc Id -> {} , C Acc Id -> {}", accountTransfer.getFromAccount(), 
+				accountTransfer.getToAccount());
 		
 		
 		totalNo.incrementAndGet();
-		timeInMillis.addAndGet(delta);
+		//timeInMillis.addAndGet(delta);
 		
 		return accountBalancesRepository.transfer(accountTransfer.getFromAccount(), accountTransfer.getToAccount(), 
 				accountTransfer.getAmount());
 	}
 
+	private void publishSettledTransaction(AccountTransfer accountTransfer) {
+		SettledTransaction settledTransaction = new SettledTransaction();
+		settledTransaction.setSettleDateTime(LocalDateTime.now());
+		settledTransaction.setPublishDateTime(accountTransfer.getPublishDateTime());
+		settledTransaction.setAmount(accountTransfer.getAmount());
+		settledTransaction.setTrn(accountTransfer.getTrn());
+		settledTransaction.setFromAccount(accountTransfer.getFromAccount());
+		settledTransaction.setToAccount(accountTransfer.getToAccount());
+		
+		settledTransactionKafkaTemplate.send(KafkaConstants.SETTLED_TOPIC, settledTransaction);
+		
+		logger.info("{} published", settledTransaction.getTrn());
+	}
+	
 	private void init() {
 		if (totalNo == null) {
 			totalNo = new AtomicLong();

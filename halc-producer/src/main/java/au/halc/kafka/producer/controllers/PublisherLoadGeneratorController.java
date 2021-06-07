@@ -1,6 +1,7 @@
 package au.halc.kafka.producer.controllers;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -82,7 +83,10 @@ public class PublisherLoadGeneratorController {
 			acctTransfer.setFromAccount(accountIds.get(fromId));
 			acctTransfer.setToAccount(accountIds.get(toId));
 			acctTransfer.setTrn(buildAcctRef());
-			acctTransfer.setAmount(KafkaAccountTransferConstants.TRAN_AMT);			
+			acctTransfer.setAmount(KafkaAccountTransferConstants.TRAN_AMT);	
+			
+			acctTransfer.setPublishDateTime(LocalDateTime.now());
+			
 			accountTransferKafkaTemplate.send(KafkaConstants.TOPIC, acctTransfer);			
 		}
 	}

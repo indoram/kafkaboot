@@ -1,6 +1,7 @@
 package au.halc.kafka.producer.controllers;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,6 +60,7 @@ public class AccountTransferController {
 	}
 	
 	private AccountTransfer publishSingleAccountTransfer(AccountTransfer accountTransfer) {
+		accountTransfer.setPublishDateTime(LocalDateTime.now());
 		accountTransferKafkaTemplate.send(KafkaConstants.TOPIC, accountTransfer);
 		logger.info("Producer Published successfully {} ", accountTransfer.toString());
         return accountTransfer;

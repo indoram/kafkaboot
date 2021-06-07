@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import au.halc.kafka.model.AccountTransfer;
+import au.halc.kafka.model.SettledTransaction;
 import au.halc.kafka.model.User;
 
 import java.util.HashMap;
@@ -137,6 +138,31 @@ public class KakfaConfiguration {
         return new DefaultKafkaProducerFactory<>(config);
     }
     
+    @Bean
+    public ProducerFactory<String, SettledTransaction> settledTransactionProducerFactory() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConstants.BOOTSTRAP_ADDRESS);
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);        
+        config.put( ProducerConfig.VALUE_SERIALIZER_CLASS_DOC, JsonSerializer.class);
+        
+        config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, PROTOCOL_SSL);        
+        config.put(SaslConfigs.SASL_MECHANISM, PLAIN);
+        
+        //dev
+        config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='N7I4DNGDGMWHQSAU'   password='e8VPxIUW5z8ea/FxNcGwTN+BnJWVBK9OJIiEpppQR/ECGingUqzppgsK2uZqPMF2';");
+        
+        //dedicated
+       //config.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='NS57YPPXXEFXLJH3'   password='47D2mDTchqwbnVqUdqXA8ngW80NRVkA+uJY8oTI3NYCgRC7Rf/csE8nap6kc4Bg1';");
+        
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+    
+    
+    @Bean
+    public KafkaTemplate<String, SettledTransaction> settledTransactionKafkaTemplate() {
+        return new KafkaTemplate<>(settledTransactionProducerFactory());
+    }
     
     @Bean
     public KafkaTemplate<String, AccountTransfer> accountTransferKafkaTemplate() {
