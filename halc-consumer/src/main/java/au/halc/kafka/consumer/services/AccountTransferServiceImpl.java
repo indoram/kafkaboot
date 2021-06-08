@@ -89,7 +89,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 		
 		settledTransactionKafkaTemplate.send(KafkaConstants.SETTLED_TOPIC, settledTransaction);
 		
-		logger.info("{} published", settledTransaction.getTrn());
+		logger.info("Published {}", settledTransaction.getTrn());
 	}
 	
 	private void init() {

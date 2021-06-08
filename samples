@@ -19,6 +19,19 @@ mvnw -pl halc-web spring-boot:run -Dmaven.test.skip=true
 mvnw -pl halc-consumer spring-boot:run -Dmaven.test.skip=true
 mvnw -pl halc-producer spring-boot:run -Dmaven.test.skip=true
 
+C:\Ramu\dev\workspace\kafkaboot\halc-web>docker build . -t indoram/kafkaweb:0.0.1
+
+
+docker build . -t indoram/kafkaproducer:0.0.1
+
+docker build . -t indoram/kafkaconsumer:0.0.1
+
+C:\Ramu\dev\workspace\kafkaboot\halc-web>docker run -p 8081:8081 indoram/kafkaweb:0.0.1
+
+C:\Ramu\dev\workspace\kafkaboot\halc-web>docker run -p 8082:8082 indoram/kafkaproducer:0.0.1
+
+docker run -p 8083:8083 indoram/kafkaconsumer:0.0.1
+
 http://localhost:8081/kafka/loadgenerator/setup
 
 set JAVA_HOME=C:\Ramu\dev\Java\jdk1.8.0_291

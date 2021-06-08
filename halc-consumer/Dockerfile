@@ -1,0 +1,4 @@
+FROM openjdk:8
+COPY target/halcconsumer-0.0.1-SNAPSHOT.war halcconsumer-0.0.1-SNAPSHOT.war
+ENTRYPOINT ["java", "-jar", "halcconsumer-0.0.1-SNAPSHOT.war"]
+EXPOSE 8083

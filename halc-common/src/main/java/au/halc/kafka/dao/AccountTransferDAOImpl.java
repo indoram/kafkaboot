@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import au.halc.kafka.model.AccountTransfer;
+import au.halc.kafka.model.AccountBalance;
+import au.halc.kafka.model.SettledTransaction;
 
 /**
  * Account Transfer DAO impl.
@@ -31,7 +33,14 @@ public class AccountTransferDAOImpl implements AccountTransferDAO {
 	
 	private String settled_trans = "INSERT INTO kafka_settled_transactions " + "(debitAccountId, creditAccountId, amount, trn) VALUES (?, ?, ?, ?)";
 	
+	private String settled_trans_1 = "INSERT INTO kafka_settled_transactions " + "(debitAccountId, creditAccountId, amount, trn,publish_time,settle_time) VALUES (?, ?, ?, ?,?,?)";
+	
 	private String settled_sql_last500 = "SELECT * FROM kafka_settled_transactions ORDER BY tran_id DESC limit 500;";
+	
+	//@Override
+	//public void inserBatch(List<SettledTransaction> settledTransactions) {
+		
+	//}
 	
 	@Override
 	public void insert(AccountTransfer accountTransfer) {
