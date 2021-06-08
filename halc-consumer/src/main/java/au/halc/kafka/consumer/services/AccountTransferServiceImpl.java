@@ -74,8 +74,12 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 		totalNo.incrementAndGet();
 		//timeInMillis.addAndGet(delta);
 		
-		return accountBalancesRepository.transfer(accountTransfer.getFromAccount(), accountTransfer.getToAccount(), 
+		boolean transferred = accountBalancesRepository.transfer(accountTransfer.getFromAccount(), accountTransfer.getToAccount(), 
 				accountTransfer.getAmount());
+		
+		publishSettledTransaction(accountTransfer);
+		
+		return transferred;
 	}
 
 	private void publishSettledTransaction(AccountTransfer accountTransfer) {
