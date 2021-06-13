@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Timestamp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,29 @@ public class AccountTransferDAOImpl implements AccountTransferDAO {
 	//}
 	
 	@Override
+	public void insertSettledBatch(List<SettledTransaction> settledTransactions) {
+		int[] records = jdbcTemplate.batchUpdate(settled_trans_1, new BatchPreparedStatementSetter() {			
+			public void setValues(PreparedStatement ptst, int i) throws SQLException {
+				SettledTransaction settledTransaction = settledTransactions.get(i);
+				ptst.setLong(1, settledTransaction.getFromAccount());
+				ptst.setLong(2, settledTransaction.getToAccount());
+				ptst.setBigDecimal(3, settledTransaction.getAmount());
+				ptst.setString(4, settledTransaction.getTrn());
+				ptst.setTimestamp(5, Timestamp.valueOf(settledTransaction.getPublishDateTime()));
+				ptst.setTimestamp(6, Timestamp.valueOf(settledTransaction.getSettleDateTime()));
+			}
+			public int getBatchSize() {
+				return settledTransactions.size();
+			}
+		});
+		
+		
+		if (records != null && records.length != settledTransactions.size()) {
+			logger.error("Error when inserting settled transactions {} {}", records.length, settledTransactions.size());
+		}
+	}
+	
+	@Override
 	public void insert(AccountTransfer accountTransfer) {
 		int total = jdbcTemplate.update(settled_trans, new Object[] {
 					accountTransfer.getFromAccount(), accountTransfer.getToAccount(), accountTransfer.getAmount(), 
@@ -76,6 +100,35 @@ public class AccountTransferDAOImpl implements AccountTransferDAO {
 		
 	}
 
+	@Override
+	public List<SettledTransaction> fetchLast500SettledTransfers() {
+		List<SettledTransaction> settList = new ArrayList<>();
+		
+		jdbcTemplate.query(settled_sql_last500, rs -> {
+			
+			SettledTransaction settledTransaction = new SettledTransaction();
+			
+			String trn = rs.getString("trn");
+			int debitAcctId = rs.getInt("debitAccountId");
+			int creditAcctId = rs.getInt("creditAccountId");
+			BigDecimal amount = rs.getBigDecimal("amount");
+			Integer tranId = rs.getInt("tran_id");
+			Timestamp publishTime = rs.getTimestamp("publish_time");
+			Timestamp settleTime = rs.getTimestamp("settle_time");
+			
+			settledTransaction.setTrn(trn);
+			settledTransaction.setFromAccount(debitAcctId);
+			settledTransaction.setToAccount(creditAcctId);
+			settledTransaction.setAmount(amount);
+			settledTransaction.setTranId(tranId);
+			settledTransaction.setPublishDateTime(publishTime.toLocalDateTime());
+			settledTransaction.setSettleDateTime(settleTime.toLocalDateTime());
+			
+			settList.add(settledTransaction);
+		});
+		return settList;
+	}
+	
 	@Override
 	public List<AccountTransfer> fetchLast500Transfers() {
 		List<AccountTransfer> acctList = new ArrayList<>();

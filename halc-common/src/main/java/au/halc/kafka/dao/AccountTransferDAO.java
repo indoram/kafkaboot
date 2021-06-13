@@ -26,4 +26,8 @@ public interface AccountTransferDAO {
 	//void inserBatch(List<SettledTransaction> settledTransactions);
 
 	List<AccountTransfer> fetchLast500Transfers();
+	
+	void insertSettledBatch(List<SettledTransaction> settledTransactions);
+	
+	List<SettledTransaction> fetchLast500SettledTransfers();
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import au.halc.kafka.model.AccountTransfer;
 import au.halc.kafka.model.DBTps;
+import au.halc.kafka.model.AccountBalance;
+import au.halc.kafka.model.SettledTransaction;
 
 /**
  * Account Transfer Service.
@@ -25,4 +27,5 @@ public interface AccountTransferService {
 	
 	DBTps getDBTPS();
 	
+	boolean insertSettledTransactions(List<SettledTransaction> settledTrans);
 }

@@ -23,6 +23,10 @@ import reactor.core.publisher.Mono;
 
 import au.halc.kafka.model.DBTps;
 import au.halc.kafka.model.AccountTransfer;
+import au.halc.kafka.model.SettledTransaction;
+import au.halc.kafka.dao.CommonDAO;
+import au.halc.kafka.dao.AccountTransferDAO;
+
 
 /**
  * PostgreSQL Controller.
@@ -42,6 +46,13 @@ public class PostgreSQLController {
 	private static final String DB_TPS_KEY = "dbtps";
 	
 	@Autowired
+	private CommonDAO commonDAO;
+	
+	@Autowired
+	private AccountTransferDAO accountTransferDAO;
+	
+	
+	@Autowired
 	private WebClient consumerWebClient;
 	
 	@Autowired
@@ -49,26 +60,27 @@ public class PostgreSQLController {
 	
 	@GetMapping("/web/dbtps/info.form")	
     public String setup(Model model, HttpServletRequest httpServletRequest) {
-		DBTps dbTps = new DBTps();
 		
-		DBTps dbResp = consumerWebClient.post()
-		        .uri("/kafka/consumer/dbtps/info.form")
-		        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-		        .body(Mono.just(dbTps), DBTps.class)
-		        .retrieve()
-		        .bodyToMono(DBTps.class)
-		        .block();
+		List<DBTps> dbTpsList = commonDAO.fetchDBTpsForLastMinute();
 		
-		AtomicLong timeInMillis = dbResp.getTimeInMillis();
-		AtomicLong totalNo = dbResp.getTotalNo();
+		int totalNo = 0;
+		long totalTimeMillis = 0L;
 		
-		String dbTpsStr = "No Account Transfers recorded!"; 
+		for (DBTps dbTps : dbTpsList) {
+			logger.info("dbTps {} {}", dbTps.getTotalNo(), dbTps.getTimeInMillis());
+			totalNo += dbTps.getTotalNo();
+			totalTimeMillis += dbTps.getTimeInMillis();
+		}
 		
-		if (timeInMillis.get() > 0 && totalNo.get() > 0 ) {
-			String tps = String.valueOf((totalNo.get() / timeInMillis.get()));
+		String dbTpsStr = "No Account Transfers recorded!";
+		
+		if (totalTimeMillis > 0 && totalNo > 0 ) {
+			//int secs = (int) (totalTimeMillis / 1000);			
+			//String tps = String.valueOf((totalNo / secs));			
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append(totalNo.get()).append(" transactions ").append(" took ").append( timeInMillis.get());
+			stringBuilder.append(totalNo).append(" transactions ").append(" took ").append( totalTimeMillis);
 			stringBuilder.append(" (ms). ");
+			//stringBuilder.append("TPS :").append(tps);
 			dbTpsStr = stringBuilder.toString();
 		}
 		
@@ -77,8 +89,9 @@ public class PostgreSQLController {
     } 
 	
 	@GetMapping("/web/dbbrowse/info.form")
-    public String browseLast500(Model model, HttpServletRequest httpServletRequest) {
-		//httpServletRequest.setAttribute(VIEW_SETTLED_NAME, accountTransfersList);
+    public String browseLast500(Model model, HttpServletRequest httpServletRequest) {		
+		List<SettledTransaction> accountTransfersList = accountTransferDAO.fetchLast500SettledTransfers();
+		httpServletRequest.setAttribute(VIEW_SETTLED_NAME, accountTransfersList);
         return VIEW_SETTLED_NAME;
     } 
 }

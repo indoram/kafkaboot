@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
@@ -20,6 +22,8 @@ import au.halc.kafka.model.SettledTransaction;
 import au.halc.kafka.model.DBTps;
 import au.halc.kafka.repository.InMemoryAccountBalancesRepository;
 
+import au.halc.kafka.model.SettledTransaction;
+
 
 /**
  * Account Transfer service Impl.
@@ -34,7 +38,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 	private au.halc.kafka.repository.AccountBalancesRepository accountBalancesRepository;
 	
 	
-	private AtomicLong totalNo;
+	private AtomicInteger totalNo;
 	private AtomicLong timeInMillis;
 	
 	
@@ -44,14 +48,29 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 	@Autowired
     private KafkaTemplate<String, SettledTransaction> settledTransactionKafkaTemplate;
 	
+	
 	@Override
 	public DBTps getDBTPS() {
 		DBTps dbTps = new DBTps();
-		dbTps.setTotalNo(totalNo);
-		dbTps.setTimeInMillis(timeInMillis);
+		
+		if (totalNo == null) {
+			totalNo = new AtomicInteger();
+		}
+		
+		if (timeInMillis == null) {
+			timeInMillis = new AtomicLong();
+		}
+		
+		dbTps.setTotalNo(totalNo.intValue());
+		dbTps.setTimeInMillis(timeInMillis.longValue());
 		return dbTps;
 	}
 	
+	@Override
+	public boolean insertSettledTransactions(List<SettledTransaction> settledTrans) {
+		accountTransferDAO.insertSettledBatch(settledTrans);
+		return true;
+	}
 	
 	@Override
 	public boolean accountTransfer(AccountTransfer accountTransfer) {
@@ -93,12 +112,12 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 		
 		settledTransactionKafkaTemplate.send(KafkaConstants.SETTLED_TOPIC, settledTransaction);
 		
-		logger.info("Published {}", settledTransaction.getTrn());
+		logger.info("Published settled trn {}", settledTransaction.getTrn());
 	}
 	
 	private void init() {
 		if (totalNo == null) {
-			totalNo = new AtomicLong();
+			totalNo = new AtomicInteger();
 		}
 		
 		if (timeInMillis == null) {

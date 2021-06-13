@@ -15,7 +15,7 @@
     	
     	<form:form id = "refresh" name = "refresh" action = "refresh.form" >
     	        		
-    		<table class="styled-table2">
+    		<table class="styled-table4">
 		            <thead>
 		                <tr>
 		                	<th>Id</th>
@@ -23,6 +23,8 @@
 		                    <th>Credit Account Id</th>
 		                    <th>Amount</th>
 		                    <th>trn</th>
+		                    <th>publish time</th>
+		                    <th>settled time</th>
 		                </tr>
 		            </thead>
 	            
@@ -35,6 +37,8 @@
 		         					<td><p style="color:green;"><c:out value="${entry.toAccount}"/></p></td>
 		         					<td><p style="color:green;"><c:out value="${entry.amount}"/></p></td>
 		         					<td><p style="color:green;"><c:out value="${entry.trn}"/></p></td>
+		         					<td><p style="color:green;"><c:out value="${entry.publishDateTime}"/></p></td>
+		         					<td><p style="color:green;"><c:out value="${entry.settleDateTime}"/></p></td>
 		     					</tr>
 						</c:forEach>
 	   						
